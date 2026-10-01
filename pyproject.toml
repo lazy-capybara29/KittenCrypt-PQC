@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pqsteg"
+dynamic = ["version"]
+description = "Hide an ML-KEM-768 + AES-256-GCM encrypted message in a PNG/BMP image"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = [
+    "kyber-py>=1.2.0",     # pure-Python ML-KEM (FIPS 203)
+    "pycryptodome>=3.20",  # AES-256-GCM
+    "reedsolo>=1.7.0",     # Reed-Solomon
+    "numpy>=1.26",
+    "Pillow>=10.0",
+    "scikit-image>=0.22",  # SSIM
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "mypy>=1.8"]
+
+[project.scripts]
+pqsteg = "pqsteg.cli:main"
+
+[tool.setuptools]
+packages = ["pqsteg"]
+
+[tool.setuptools.dynamic]
+version = { attr = "pqsteg.__version__" }
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true  # kyber_py, reedsolo, Crypto and skimage ship no type stubs
