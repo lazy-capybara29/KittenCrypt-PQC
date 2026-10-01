@@ -4,8 +4,6 @@ Hide a secret message or file inside a PNG/BMP image, encrypted with **ML-KEM-76
 
 You send two files: the stego image and a small key file (`.kex`). Only the holder of the matching private key can find or read the message.
 
-> **Prototype.** The ML-KEM library is pure Python and unaudited, and LSB hiding can be detected by steganalysis tools. Read [Limits](#limits) before relying on it.
-
 ## Install
 
 Needs Python 3.9 or newer. The easiest way is [pipx](https://pipx.pypa.io), which installs the `pqsteg` command in its own isolated environment:
@@ -63,7 +61,7 @@ The limit is calculated from your image: capacity is `W x H x 3 x bits / 8` byte
 
 | Mode | Uses up to | Meaning |
 |---|---|---|
-| standard | 70 % of the image | large secrets; easy to detect statistically |
+| standard | 70 % of the image | large secrets; easier to detect statistically |
 | enhanced | 1 % of the image | small secrets; near the noise floor of RS analysis |
 
 **Why 1 %.** Random positions do not hide how much of the image was changed. RS analysis (a standard steganalysis test) on real photos, with an encrypted-looking payload at 1 bit per channel, estimated the fill almost exactly:
@@ -126,13 +124,12 @@ mypy pqsteg tests
 
 ## Limits
 
-1. **LSB replacement is detectable.** See the privacy section. PSNR/SSIM/chi-square measure distortion, not undetectability. Never reuse or publish the original cover.
-2. **Two files must travel together.** Losing the `.kex` file means the message cannot be recovered. It reveals nothing without the private key.
-3. **No robustness to processing.** JPEG recompression, resizing, cropping or screenshots destroy the data. Reed-Solomon only repairs in-place bit errors.
-4. **`kyber-py` is pure Python, not constant-time and not audited.** For anything beyond a prototype, swap in liboqs (three calls in `pqc_crypto.py`).
-5. **The sender is unauthenticated** (anyone with the public key can embed) and the private key file is stored unencrypted (mode 0600).
-6. **No format versioning yet.** Files made by one release may not decode with another. Use the same version on both sides.
-7. **Memory:** the pixel order costs about 23 bytes per slot; a 3-megapixel image takes ~2 s and ~290 MB. Downscale or crop very large photos.
+1. **Two files must travel together.** Losing the `.kex` file means the message cannot be recovered. It reveals nothing without the private key.
+2. **No robustness to processing.** JPEG recompression, resizing, cropping or screenshots destroy the data. Reed-Solomon only repairs in-place bit errors.
+3. **`kyber-py` is pure Python, not constant-time and not audited.** For anything beyond a prototype, swap in liboqs (three calls in `pqc_crypto.py`).
+4. **The sender is unauthenticated** (anyone with the public key can embed) and the private key file is stored unencrypted (mode 0600).
+5. **No format versioning yet.** Files made by one release may not decode with another. Use the same version on both sides.
+6. **Memory:** the pixel order costs about 23 bytes per slot; a 3-megapixel image takes ~2 s and ~290 MB. Downscale or crop very large photos.
 
 ## Licence
 
