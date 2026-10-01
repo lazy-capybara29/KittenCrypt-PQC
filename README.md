@@ -1,4 +1,5 @@
-# pqsteg
+# KittenCrypt PQC
+I started this as a distraction from LLM Safety research, because I thought it was funny to be able to hide a few hundred thousand encrypted words in a single phone camera photo.
 
 Hide a secret message or file inside a PNG/BMP image, encrypted with **ML-KEM-768 (Kyber) + AES-256-GCM**, protected by **Reed-Solomon** error correction, and written at **pseudo-random pixel positions derived from the Kyber secret**. Every embed reports PSNR, SSIM and a chi-square histogram distance.
 
